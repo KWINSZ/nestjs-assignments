@@ -25,6 +25,18 @@ const isPrime = (num) => {
   return true; // No divisors found, it's prime
 };
 
+// Function to calculate the factorial of a number
+const calculateFactorial = (num) => {
+  if (num < 0) {
+    return { error: 'Factorial is not defined for negative numbers.' }; // Factorial is not defined for negative numbers
+  }
+  let result = 1;
+  for (let i = 1; i <= num; i++) {
+    result *= i; // Multiply result by each number from 1 to num
+  }
+  return result;
+};
+
 // Endpoint to get Fibonacci sequence
 app.get('/assignments/fibonacci/:n', (req, res) => {
   const n = parseInt(req.params.n);
@@ -47,6 +59,23 @@ app.get('/assignments/prime/:number', (req, res) => {
 
   const primeStatus = isPrime(number);
   res.json({ isPrime: primeStatus });
+});
+
+// Endpoint to calculate the factorial of a number
+app.get('/assignments/factorial/:number', (req, res) => {
+  const number = parseInt(req.params.number);
+
+  if (isNaN(number)) {
+    return res.status(400).json({ error: 'Please provide a valid number.' });
+  }
+
+  const factorial = calculateFactorial(number);
+
+  if (factorial.error) {
+    return res.status(400).json({ error: factorial.error });
+  }
+
+  res.json({ factorial: factorial });
 });
 
 app.listen(port, () => {
